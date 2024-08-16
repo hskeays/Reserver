@@ -1,0 +1,47 @@
+<resources>
+    <!-- Application Info -->
+    <string name="app_name">Reserver</string>
+
+    <!-- UI Labels -->
+    <string name="seating_prompt">Where do you want to sit?</string>
+    <string name="seat_count_prompt">How many seats would you like to reserve?</string>
+    <string name="seat_count_input_hint">Enter a number</string>
+    <string name="submit">Submit</string>
+    <string name="seating_overhead_view">Seating overhead view</string>
+    <string name="img_floor_plan">Floor plan</string>
+    <string name="img_small_round_table_icon">Small round table icon</string>
+    <string name="img_large_rectangle_table_icon">Large rectangle table icon</string>
+    <string name="back_icon">Back icon</string>
+
+    <!-- Feedback Messages -->
+    <string name="seat_count_error_msg">The number must be between 1 and 6</string>
+    <string name="seat_count_larger_than_6_msg">Please call 123–456–7890 to make a reservation for parties larger than 6</string>
+    <string name="seat_count_success_msg">Thank you for reserving your seat(s)!</string>
+    <string name="seat_count_empty_error_msg">Please enter the amount of seats you would like to reserve</string>
+    <string name="seat_count_gt_1000">Okay, let\'s not get ridiculous.</string>
+
+    <!-- Days of the Week -->
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+
+    <!-- Time Slots -->
+    <string name="four_pm">4:00 p.m.</string>
+    <string name="four_thirty_pm">4:30 p.m.</string>
+    <string name="five_pm">5:00 p.m.</string>
+    <string name="five_thirty_pm">5:30 p.m.</string>
+    <string name="six_pm">6:00 p.m.</string>
+    <string name="six_thirty_pm">6:30 p.m.</string>
+    <string name="seven_pm">7:00 p.m.</string>
+    <string name="seven_thirty_pm">7:30 p.m.</string>
+
+    <!-- Menu Items -->
+    <string name="help">Help</string>
+    <string name="info">Information</string>
+
+    <!-- Miscellaneous -->
+    <string name="empty_string"> </string>
+    <string name="a_graphic_of_a_waiter">A graphic of a waiter</string>
+    <string name="Back">Back</string>
+    <string name="time_slot">Time Slot</string>
+</resources>

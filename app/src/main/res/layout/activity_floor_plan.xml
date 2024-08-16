@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FloorPlanActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/overhead"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/img_floor_plan"
+        app:srcCompat="@drawable/overhead" />
+
+    <ImageView
+        android:id="@+id/iv_small_table1"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="320dp"
+        android:layout_marginEnd="290dp"
+        android:contentDescription="@string/img_small_round_table_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/roundsolid" />
+
+    <ImageView
+        android:id="@+id/iv_small_table2"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/img_small_round_table_icon"
+        app:layout_constraintStart_toStartOf="@+id/iv_small_table1"
+        app:layout_constraintTop_toBottomOf="@+id/iv_small_table1"
+        app:srcCompat="@drawable/roundsolid" />
+
+    <ImageView
+        android:id="@+id/iv_small_table3"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="340dp"
+        android:layout_marginEnd="32dp"
+        android:contentDescription="@string/img_small_round_table_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/roundsolid" />
+
+    <ImageView
+        android:id="@+id/iv_small_table4"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/img_small_round_table_icon"
+        app:layout_constraintStart_toEndOf="@+id/iv_small_table3"
+        app:layout_constraintTop_toTopOf="@+id/iv_small_table3"
+        app:srcCompat="@drawable/roundsolid" />
+
+    <ImageView
+        android:id="@+id/iv_small_table5"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/img_small_round_table_icon"
+        app:layout_constraintStart_toStartOf="@+id/iv_small_table3"
+        app:layout_constraintTop_toBottomOf="@+id/iv_small_table3"
+        app:srcCompat="@drawable/roundsolid" />
+
+    <ImageView
+        android:id="@+id/iv_small_table6"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@string/img_small_round_table_icon"
+        app:layout_constraintEnd_toEndOf="@+id/iv_small_table4"
+        app:layout_constraintTop_toBottomOf="@+id/iv_small_table4"
+        app:srcCompat="@drawable/roundsolid" />
+
+    <ImageView
+        android:id="@+id/iv_lrg_table1"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="65dp"
+        android:layout_marginBottom="220dp"
+        android:contentDescription="@string/img_large_rectangle_table_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/rectanglesolid" />
+
+    <ImageView
+        android:id="@+id/iv_lrg_table2"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/img_large_rectangle_table_icon"
+        app:layout_constraintStart_toEndOf="@+id/iv_lrg_table1"
+        app:layout_constraintTop_toTopOf="@+id/iv_lrg_table1"
+        app:srcCompat="@drawable/rectanglesolid" />
+
+    <ImageView
+        android:id="@+id/iv_lrg_table3"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/img_large_rectangle_table_icon"
+        app:layout_constraintStart_toEndOf="@+id/iv_lrg_table2"
+        app:layout_constraintTop_toTopOf="@+id/iv_lrg_table2"
+        app:srcCompat="@drawable/rectanglesolid" />
+
+    <ImageView
+        android:id="@+id/iv_lrg_table4"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="8dp"
+        android:contentDescription="@string/img_large_rectangle_table_icon"
+        app:layout_constraintBottom_toTopOf="@+id/iv_lrg_table5"
+        app:layout_constraintEnd_toEndOf="@+id/iv_lrg_table5"
+        app:srcCompat="@drawable/rectanglesolid" />
+
+    <ImageView
+        android:id="@+id/iv_lrg_table5"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:contentDescription="@string/img_large_rectangle_table_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/rectanglesolid" />
+
+    <ImageView
+        android:id="@+id/iv_lrg_table6"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/img_large_rectangle_table_icon"
+        app:layout_constraintEnd_toEndOf="@+id/iv_lrg_table5"
+        app:layout_constraintTop_toBottomOf="@+id/iv_lrg_table5"
+        app:srcCompat="@drawable/rectanglesolid" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

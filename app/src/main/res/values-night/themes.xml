@@ -1,0 +1,25 @@
+<resources>
+
+    <style name="Base.Theme.Reserver" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary color -->
+        <item name="colorPrimary">#5A9F5B</item>
+        <item name="colorPrimaryVariant">#3700B3</item>
+
+        <!-- Secondary color -->
+        <item name="colorSecondary">#03DAC6</item>
+
+        <!-- Background color -->
+        <item name="backgroundColor">#121212</item>
+        <item name="colorSurface">#1E1E1E</item>
+
+        <!-- Error color -->
+        <item name="colorError">#CF6679</item>
+
+        <!-- Text colors -->
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorOnSecondary">#000000</item>
+        <item name="colorOnBackground">#FFFFFF</item>
+        <item name="colorOnSurface">#FFFFFF</item>
+        <item name="colorOnError">#000000</item>
+    </style>
+</resources>
