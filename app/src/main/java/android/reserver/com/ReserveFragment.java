@@ -32,21 +32,32 @@ public class ReserveFragment extends Fragment {
     private static final String SEAT_COUNT_KEY = "SEAT_COUNT"; // Key for passing seat count to the next activity
     private EditText etvSeatingCountInput; // EditText for seat count input
     private TextView tvFeedbackMsg; // TextView for displaying feedback messages
-    private RecyclerView recyclerView; // RecyclerView for displaying time slots
-    private TimeSlotAdapter adapter; // Adapter for managing the RecyclerView's data
     private List<TimeSlot> timeSlots; // List to hold time slot data
+    private DatabaseHelper dbHelper; // Database helper instance
+    private String selectedDay; // Selected day for the reservation
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_reserve, container, false); // Inflate the layout
 
+        // Initialize the database helper
+        dbHelper = new DatabaseHelper(getContext());
+
         // Initialize UI components
         etvSeatingCountInput = view.findViewById(R.id.etv_seating_count_input);
         tvFeedbackMsg = view.findViewById(R.id.tv_feedback_msg);
-        Button btnSubmit = view.findViewById(R.id.btn_submit);
+
+        // Set up buttons for day selection
+        Button btnFriday = view.findViewById(R.id.btn_fri);
+        Button btnSaturday = view.findViewById(R.id.btn_sat);
+        Button btnSunday = view.findViewById(R.id.btn_sun);
+        btnFriday.setOnClickListener(v -> selectDay("Friday"));
+        btnSaturday.setOnClickListener(v -> selectDay("Saturday"));
+        btnSunday.setOnClickListener(v -> selectDay("Sunday"));
 
         // Set up the submit button's click listener
+        Button btnSubmit = view.findViewById(R.id.btn_submit);
         btnSubmit.setOnClickListener(v -> handleSubmit());
 
         // Set up a text watcher for the seating count input field
@@ -68,29 +79,8 @@ public class ReserveFragment extends Fragment {
             }
         });
 
-        // Set up the RecyclerView if it's available (landscape mode)
-        recyclerView = view.findViewById(R.id.rv_time_slots);
-        if (recyclerView != null) {
-            int orientation = getResources().getConfiguration().orientation;
-
-            // Set the layout manager based on orientation
-            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2)); // Grid layout for landscape
-            }
-
-            // Initialize the list of time slots
-            initializeTimeSlots();
-
-            // Set up the adapter with a click listener for each time slot
-            adapter = new TimeSlotAdapter(timeSlots, position -> {
-                TimeSlot selectedTimeSlot = timeSlots.get(position);
-                Toast.makeText(getContext(), "Selected: " + selectedTimeSlot.getTime(), Toast.LENGTH_SHORT).show();
-            });
-
-            recyclerView.setAdapter(adapter); // Attach the adapter to the RecyclerView
-        }
+        // Set up the RecyclerView for displaying time slots
+        setupRecyclerView(view);
 
         // Handle keyboard visibility
         etvSeatingCountInput.setOnEditorActionListener((v, actionId, event) -> {
@@ -100,7 +90,7 @@ public class ReserveFragment extends Fragment {
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
-                // Clear focus
+                // Clear focus from the EditText
                 v.clearFocus();
                 return true;
             }
@@ -110,11 +100,61 @@ public class ReserveFragment extends Fragment {
         return view;
     }
 
-    /**
-     * Handles the submit button click event.
-     * Validates the seat count input and, if valid, shows a confirmation dialog.
-     * If the user confirms, starts the FloorPlanActivity with the seat count.
-     */
+    // Method to handle day selection
+    private void selectDay(String day) {
+        selectedDay = day;
+        Toast.makeText(getActivity(), selectedDay + " selected", Toast.LENGTH_SHORT).show();
+    }
+
+    // Method to handle time slot selection
+    private void handleTimeSlotSelection(String selectedTime) {
+        String seatingCountText = etvSeatingCountInput.getText().toString().trim();
+
+        if (!seatingCountText.isEmpty()) {
+            try {
+                int seatingCountInt = Integer.parseInt(seatingCountText);
+                if (seatingCountInt > 6 || seatingCountInt < 1) {
+                    Toast.makeText(getActivity(), R.string.seat_count_error_msg, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (selectedDay == null) {
+                    Toast.makeText(getActivity(), "Please select a day", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Query available seats based on selected day and time
+                List<Seat> availableSeats = dbHelper.getAvailableSeats(selectedDay, selectedTime, seatingCountInt);
+                showAvailableSeatsDialog(availableSeats);
+            } catch (NumberFormatException nfe) {
+                Toast.makeText(getActivity(), R.string.seat_count_error_msg, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getActivity(), R.string.seat_count_empty_error_msg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Method to display a dialog with available seats
+    private void showAvailableSeatsDialog(List<Seat> availableSeats) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Available Seats");
+
+        StringBuilder message = new StringBuilder();
+        if (availableSeats.isEmpty()) {
+            message.append("No available seats.");
+        } else {
+            for (Seat seat : availableSeats) {
+                message.append(seat.getName()).append(" (").append(seat.getType()).append(")\n");
+            }
+        }
+
+        builder.setMessage(message.toString());
+        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss()); // Dismiss dialog on "OK" selection
+        AlertDialog dialog = builder.create();
+        dialog.show(); // Display the dialog
+    }
+
+    // Method to handle submission of the reservation
     private void handleSubmit() {
         String seatingCountText = etvSeatingCountInput.getText().toString().trim();
 
@@ -122,26 +162,21 @@ public class ReserveFragment extends Fragment {
             try {
                 int seatingCountInt = Integer.parseInt(seatingCountText);
                 if (seatingCountInt > 6 || seatingCountInt < 1) {
-                    Toast.makeText(getActivity(), R.string.seat_count_error_msg, Toast.LENGTH_SHORT).show(); // Handle invalid seating count
+                    Toast.makeText(getActivity(), R.string.seat_count_error_msg, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // Show a confirmation dialog
+                // Show a confirmation dialog before proceeding
                 showConfirmationDialog(seatingCountInt);
             } catch (NumberFormatException nfe) {
-                Toast.makeText(getActivity(), R.string.seat_count_error_msg, Toast.LENGTH_SHORT).show(); // Handle invalid number format
+                Toast.makeText(getActivity(), R.string.seat_count_error_msg, Toast.LENGTH_SHORT).show();
             }
         } else {
-            Toast.makeText(getActivity(), R.string.seat_count_empty_error_msg, Toast.LENGTH_SHORT).show(); // Handle empty input
+            Toast.makeText(getActivity(), R.string.seat_count_empty_error_msg, Toast.LENGTH_SHORT).show();
         }
     }
 
-    /**
-     * Shows a confirmation dialog with "Yes" and "No" options.
-     * If "Yes" is selected, the FloorPlanActivity is started with the seat count.
-     *
-     * @param seatingCountInt The seat count to pass to the next activity.
-     */
+    // Method to show a confirmation dialog
     private void showConfirmationDialog(int seatingCountInt) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Confirm Action");
@@ -154,17 +189,12 @@ public class ReserveFragment extends Fragment {
             startActivity(intent);
         });
 
-        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss()); // Dismiss dialog on "No" selection
-
+        builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
-        dialog.show(); // Display the dialog
+        dialog.show(); // Display the confirmation dialog
     }
 
-    /**
-     * Updates the feedback message based on the input seating count.
-     *
-     * @param input The input text from the seating count EditText.
-     */
+    // Method to update the feedback message based on the input
     private void updateFeedbackMessage(CharSequence input) {
         String seatingCountText = input.toString().trim();
         if (!seatingCountText.isEmpty()) {
@@ -181,36 +211,57 @@ public class ReserveFragment extends Fragment {
         }
     }
 
-    /**
-     * Returns the appropriate feedback message resource ID based on the seating count.
-     *
-     * @param seatingCount The seating count to evaluate.
-     * @return The resource ID of the feedback message.
-     */
+    // Method to determine the appropriate feedback message resource ID based on seating count
     private int getFeedbackMessageResId(int seatingCount) {
         if (seatingCount >= 1 && seatingCount <= 6) {
-            return R.string.empty_string;
+            return R.string.empty_string; // No feedback message for valid input
         } else if (seatingCount > 6 && seatingCount < 1000) {
-            return R.string.seat_count_larger_than_6_msg;
+            return R.string.seat_count_larger_than_6_msg; // Feedback for exceeding maximum seats
         } else if (seatingCount >= 1000) {
-            return R.string.seat_count_gt_1000;
+            return R.string.seat_count_gt_1000; // Feedback for excessively large count
         } else {
-            return R.string.seat_count_error_msg;
+            return R.string.seat_count_error_msg; // General error message
         }
     }
 
-    /**
-     * Initializes the list of time slots.
-     */
+    // Method to set up the RecyclerView and its layout manager
+    private void setupRecyclerView(View view) {
+        // Find the RecyclerView in the layout
+        RecyclerView recyclerView = view.findViewById(R.id.rv_time_slots);
+        if (recyclerView != null) {
+            int orientation = getResources().getConfiguration().orientation;
+
+            // Set the layout manager based on the orientation
+            if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2)); // Grid layout for landscape
+            }
+
+            // Initialize the list of time slots
+            initializeTimeSlots();
+
+            // Set up the adapter with a click listener for each time slot
+            TimeSlotAdapter adapter = new TimeSlotAdapter(timeSlots, position -> {
+                TimeSlot selectedTimeSlot = timeSlots.get(position);
+                handleTimeSlotSelection(selectedTimeSlot.getTime());
+            });
+
+            recyclerView.setAdapter(adapter); // Attach the adapter to the RecyclerView
+        }
+    }
+
+    // Method to initialize the time slots available for selection
     private void initializeTimeSlots() {
         timeSlots = new ArrayList<>();
-        timeSlots.add(new TimeSlot("4:00 PM"));
-        timeSlots.add(new TimeSlot("4:30 PM"));
-        timeSlots.add(new TimeSlot("5:00 PM"));
-        timeSlots.add(new TimeSlot("5:30 PM"));
-        timeSlots.add(new TimeSlot("6:00 PM"));
-        timeSlots.add(new TimeSlot("6:30 PM"));
-        timeSlots.add(new TimeSlot("7:00 PM"));
-        timeSlots.add(new TimeSlot("7:30 PM"));
+        // Add predefined time slots
+        timeSlots.add(new TimeSlot("4:00"));
+        timeSlots.add(new TimeSlot("4:30"));
+        timeSlots.add(new TimeSlot("5:00"));
+        timeSlots.add(new TimeSlot("5:30"));
+        timeSlots.add(new TimeSlot("6:00"));
+        timeSlots.add(new TimeSlot("6:30"));
+        timeSlots.add(new TimeSlot("7:00"));
+        timeSlots.add(new TimeSlot("7:30"));
     }
 }
