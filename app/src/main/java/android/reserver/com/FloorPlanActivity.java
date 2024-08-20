@@ -1,37 +1,33 @@
 package android.reserver.com;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FloorPlanActivity extends AppCompatActivity {
 
-    private ImageView ivSmallTable1;
-    private ImageView ivSmallTable2;
-    private ImageView ivSmallTable3;
-    private ImageView ivSmallTable4;
-    private ImageView ivSmallTable5;
-    private ImageView ivSmallTable6;
+    // ImageView references for small and large tables
+    private ImageView ivSmallTable1, ivSmallTable2, ivSmallTable3, ivSmallTable4, ivSmallTable5, ivSmallTable6;
+    private ImageView ivLargeTable1, ivLargeTable2, ivLargeTable3, ivLargeTable4, ivLargeTable5, ivLargeTable6;
 
-    private ImageView ivLargeTable1;
-    private ImageView ivLargeTable2;
-    private ImageView ivLargeTable3;
-    private ImageView ivLargeTable4;
-    private ImageView ivLargeTable5;
-    private ImageView ivLargeTable6;
-
-
+    // Map to associate ImageViews with their respective table names
+    private final Map<ImageView, String> tableMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,34 +35,35 @@ public class FloorPlanActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_floor_plan);
 
+        // Setup the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Adjust window insets for padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Extras
+        // Retrieve extras from the Intent
         int seatCountInt = getIntent().getIntExtra("SEAT_COUNT", 0);
         ArrayList<String> unavailSeatNames = getIntent().getStringArrayListExtra("UNAVAIL_SEAT_NAMES");
 
-        // Initialize the ImageView variables
-        ivSmallTable1 = findViewById(R.id.iv_small_table1);
-        ivSmallTable2 = findViewById(R.id.iv_small_table2);
-        ivSmallTable3 = findViewById(R.id.iv_small_table3);
-        ivSmallTable4 = findViewById(R.id.iv_small_table4);
-        ivSmallTable5 = findViewById(R.id.iv_small_table5);
-        ivSmallTable6 = findViewById(R.id.iv_small_table6);
+        // Initialize ImageView variables
+        initializeImageViews();
 
-        ivLargeTable1 = findViewById(R.id.iv_lrg_table1);
-        ivLargeTable2 = findViewById(R.id.iv_lrg_table2);
-        ivLargeTable3 = findViewById(R.id.iv_lrg_table3);
-        ivLargeTable4 = findViewById(R.id.iv_lrg_table4);
-        ivLargeTable5 = findViewById(R.id.iv_lrg_table5);
-        ivLargeTable6 = findViewById(R.id.iv_lrg_table6);
+        // Create arrays for small and large table ImageViews
+        ImageView[] smallTableImgViews = {ivSmallTable1, ivSmallTable2, ivSmallTable3, ivSmallTable4, ivSmallTable5, ivSmallTable6};
+        ImageView[] largeTableImgViews = {ivLargeTable1, ivLargeTable2, ivLargeTable3, ivLargeTable4, ivLargeTable5, ivLargeTable6};
 
+        // Set OnClickListeners for small tables
+        setTableClickListeners(smallTableImgViews, "C", unavailSeatNames);
+
+        // Set OnClickListeners for large tables
+        setTableClickListeners(largeTableImgViews, "B", unavailSeatNames);
+
+        // Set images for unavailable seats
         setImagesForUnavailableSeats(unavailSeatNames, seatCountInt);
     }
 
@@ -94,14 +91,51 @@ public class FloorPlanActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Initializes ImageView variables for small and large tables.
+     */
+    private void initializeImageViews() {
+        ivSmallTable1 = findViewById(R.id.iv_small_table1);
+        ivSmallTable2 = findViewById(R.id.iv_small_table2);
+        ivSmallTable3 = findViewById(R.id.iv_small_table3);
+        ivSmallTable4 = findViewById(R.id.iv_small_table4);
+        ivSmallTable5 = findViewById(R.id.iv_small_table5);
+        ivSmallTable6 = findViewById(R.id.iv_small_table6);
+
+        ivLargeTable1 = findViewById(R.id.iv_lrg_table1);
+        ivLargeTable2 = findViewById(R.id.iv_lrg_table2);
+        ivLargeTable3 = findViewById(R.id.iv_lrg_table3);
+        ivLargeTable4 = findViewById(R.id.iv_lrg_table4);
+        ivLargeTable5 = findViewById(R.id.iv_lrg_table5);
+        ivLargeTable6 = findViewById(R.id.iv_lrg_table6);
+    }
+
+    /**
+     * Sets OnClickListeners for table ImageViews based on their names and availability.
+     *
+     * @param tableImgViews    Array of ImageView references for the tables
+     * @param tablePrefix      Prefix for naming tables (e.g., "C" for small tables, "B" for large tables)
+     * @param unavailSeatNames List of unavailable seat names
+     */
+    private void setTableClickListeners(ImageView[] tableImgViews, String tablePrefix, ArrayList<String> unavailSeatNames) {
+        for (int i = 0; i < tableImgViews.length; i++) {
+            String tableName = tablePrefix + (i + 1); // Naming tables as "C1", "C2", etc.
+            tableImgViews[i].setOnClickListener(new ImageToggleListener(tableImgViews[i], tableName, unavailSeatNames));
+        }
+    }
+
+    /**
+     * Sets images for unavailable seats based on the provided list and seat count.
+     *
+     * @param unavailSeatNames List of unavailable seat names
+     * @param seatCountInt     Total number of seats
+     */
     private void setImagesForUnavailableSeats(ArrayList<String> unavailSeatNames, int seatCountInt) {
+        // Set all small tables to "faded" if seat count is 4 or more
         if (seatCountInt >= 4) {
-            ivSmallTable1.setImageResource(R.drawable.roundfaded);
-            ivSmallTable2.setImageResource(R.drawable.roundfaded);
-            ivSmallTable3.setImageResource(R.drawable.roundfaded);
-            ivSmallTable4.setImageResource(R.drawable.roundfaded);
-            ivSmallTable5.setImageResource(R.drawable.roundfaded);
-            ivSmallTable6.setImageResource(R.drawable.roundfaded);
+            for (ImageView smallTable : new ImageView[]{ivSmallTable1, ivSmallTable2, ivSmallTable3, ivSmallTable4, ivSmallTable5, ivSmallTable6}) {
+                smallTable.setImageResource(R.drawable.roundfaded);
+            }
         }
 
         // Check for unavailable seats and set the corresponding images
@@ -146,6 +180,84 @@ public class FloorPlanActivity extends AppCompatActivity {
                 default:
                     break;
             }
+        }
+    }
+
+    /**
+     * Inner class to handle toggling of table images on click.
+     */
+    private class ImageToggleListener implements View.OnClickListener {
+        private final ImageView imageView;
+        private final String tableName;
+        private final ArrayList<String> unavailSeatNames;
+
+        public ImageToggleListener(ImageView imageView, String tableName, ArrayList<String> unavailSeatNames) {
+            this.imageView = imageView;
+            this.tableName = tableName;
+            this.unavailSeatNames = unavailSeatNames;
+        }
+
+        @Override
+        public void onClick(View v) {
+            // Check if the table name is in the unavailable seat names list
+            if (unavailSeatNames.contains(tableName)) {
+                // If the table is unavailable, do nothing
+                return;
+            }
+
+            Drawable currentDrawable = imageView.getDrawable();
+            Drawable roundSolid = ResourcesCompat.getDrawable(getResources(), R.drawable.roundsolid, null);
+            Drawable roundFaded = ResourcesCompat.getDrawable(getResources(), R.drawable.roundfaded, null);
+            Drawable rectangleSolid = ResourcesCompat.getDrawable(getResources(), R.drawable.rectanglesolid, null);
+            Drawable rectangleFaded = ResourcesCompat.getDrawable(getResources(), R.drawable.rectanglefaded, null);
+
+            // Toggle the image based on the type of table
+            if (isRoundTable()) {
+                toggleImage(currentDrawable, roundSolid, roundFaded, R.drawable.roundsolid, R.drawable.roundfaded);
+            } else if (isRectangleTable()) {
+                toggleImage(currentDrawable, rectangleSolid, rectangleFaded, R.drawable.rectanglesolid, R.drawable.rectanglefaded);
+            }
+        }
+
+        /**
+         * Toggles the image state based on the current drawable.
+         *
+         * @param currentDrawable The current drawable of the ImageView
+         * @param solidDrawable   Drawable for solid state
+         * @param fadedDrawable   Drawable for faded state
+         * @param solidResId      Resource ID for solid drawable
+         * @param fadedResId      Resource ID for faded drawable
+         */
+        private void toggleImage(Drawable currentDrawable, Drawable solidDrawable, Drawable fadedDrawable, int solidResId, int fadedResId) {
+            if (currentDrawable != null && solidDrawable != null && fadedDrawable != null) {
+                if (currentDrawable.getConstantState().equals(solidDrawable.getConstantState())) {
+                    // Change to "faded" state
+                    imageView.setImageResource(fadedResId);
+                    tableMap.put(imageView, tableName); // Save the table name
+                } else if (currentDrawable.getConstantState().equals(fadedDrawable.getConstantState())) {
+                    // Change back to "solid" state
+                    imageView.setImageResource(solidResId);
+                    tableMap.remove(imageView); // Remove the table name
+                }
+            }
+        }
+
+        /**
+         * Checks if the table is a round table.
+         *
+         * @return True if the table is round, otherwise false
+         */
+        private boolean isRoundTable() {
+            return tableName.startsWith("C");
+        }
+
+        /**
+         * Checks if the table is a rectangular table.
+         *
+         * @return True if the table is rectangular, otherwise false
+         */
+        private boolean isRectangleTable() {
+            return tableName.startsWith("B");
         }
     }
 }
