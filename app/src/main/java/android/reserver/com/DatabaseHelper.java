@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -98,13 +97,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             db = this.getReadableDatabase(); // Get readable database
 
-            // Construct the SQL query to find available seats
-            String query = "SELECT * FROM " + TABLE_SEATS + " WHERE id NOT IN " +
-                    "(SELECT seatId FROM " + TABLE_RESERVATIONS + " WHERE day = ? AND time = ?)";
-
-            // Log the query and parameters for debugging
-            Log.d("DatabaseHelper", "Query: " + query);
-            Log.d("DatabaseHelper", "Parameters: " + Arrays.toString(new String[]{day, time}));
+            String query;
+            if (numberOfSeats >= 4 && numberOfSeats <= 6) {
+                query = "SELECT * FROM " + TABLE_SEATS + " WHERE " + COLUMN_TYPE + " = 'Booth' AND id NOT IN " +
+                        "(SELECT seatId FROM " + TABLE_RESERVATIONS + " WHERE day = ? AND time = ?)";
+            } else {
+                // If not in the range, you might want to handle other seat types
+                query = "SELECT * FROM " + TABLE_SEATS + " WHERE id NOT IN " +
+                        "(SELECT seatId FROM " + TABLE_RESERVATIONS + " WHERE day = ? AND time = ?)";
+            }
 
             // Execute the query with parameters
             cursor = db.rawQuery(query, new String[]{day, time});
@@ -125,8 +126,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     // Create a new Seat object and add it to the list of available seats
                     availableSeats.add(new Seat(id, name, type));
                 } while (cursor.moveToNext());
-            } else {
-                Log.d("DatabaseHelper", "No available seats found."); // Log if no seats found
             }
         } catch (Exception e) {
             // Log the exception for debugging
@@ -142,4 +141,55 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return availableSeats; // Return the list of available seats
     }
+
+    public ArrayList<String> getUnavailableSeatsNames(String day, String time) {
+        ArrayList<String> unavailableSeats = new ArrayList<>(); // List to hold unavailable seat names
+        SQLiteDatabase db = null; // Database instance
+        Cursor cursor = null; // Cursor to traverse query results
+
+        try {
+            db = this.getReadableDatabase(); // Get readable database
+
+            // Construct the SQL query to find unavailable seats based on the day and time
+            String query = "SELECT s.* FROM " + TABLE_SEATS + " s " +
+                    "JOIN " + TABLE_RESERVATIONS + " r ON s.id = r.seatId " +
+                    "WHERE r.day = ? AND r.time = ?";
+
+            // Execute the query with parameters
+            cursor = db.rawQuery(query, new String[]{day, time});
+
+            // Check if the cursor has results
+            if (cursor.moveToFirst()) {
+                // Get column indices for seat attributes
+                int idIndex = cursor.getColumnIndex(COLUMN_ID);
+                int nameIndex = cursor.getColumnIndex(COLUMN_NAME);
+                int typeIndex = cursor.getColumnIndex(COLUMN_TYPE);
+
+                do {
+                    // Retrieve seat attributes from the cursor
+                    int id = cursor.getInt(idIndex);
+                    String name = cursor.getString(nameIndex);
+                    String type = cursor.getString(typeIndex);
+
+                    // Create a new Seat object and add it to the list of unavailable seats
+                    unavailableSeats.add(name);
+                } while (cursor.moveToNext());
+            } else {
+                Log.d("DatabaseHelper", "No unavailable seats found."); // Log if no seats found
+            }
+        } catch (Exception e) {
+            // Log the exception for debugging
+            e.printStackTrace();
+        } finally {
+            // Ensure resources are closed to prevent memory leaks
+            if (cursor != null) {
+                cursor.close(); // Close cursor if it is not null
+            }
+            if (db != null) {
+                db.close(); // Close database if it is not null
+            }
+        }
+        return unavailableSeats; // Return the list of unavailable seats
+    }
+
 }

@@ -44,4 +44,7 @@
     <string name="a_graphic_of_a_waiter">A graphic of a waiter</string>
     <string name="Back">Back</string>
     <string name="time_slot">Time Slot</string>
+    <string name="enter_your_name_to_reserve">Enter your name to reserve your seat</string>
+    <string name="reserve">Reserve</string>
+    <string name="name">Name</string>
 </resources>

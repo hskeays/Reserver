@@ -21,20 +21,23 @@
     <ImageView
         android:id="@+id/overhead"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:contentDescription="@string/img_floor_plan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:srcCompat="@drawable/overhead" />
 
     <ImageView
         android:id="@+id/iv_small_table1"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginTop="320dp"
-        android:layout_marginEnd="290dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="100dp"
         android:contentDescription="@string/img_small_round_table_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/overhead"
+        app:layout_constraintTop_toTopOf="@+id/overhead"
         app:srcCompat="@drawable/roundsolid" />
 
     <ImageView
@@ -51,12 +54,11 @@
         android:id="@+id/iv_small_table3"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginTop="340dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginStart="172dp"
+        android:layout_marginTop="120dp"
         android:contentDescription="@string/img_small_round_table_icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/overhead"
+        app:layout_constraintTop_toTopOf="@+id/overhead"
         app:srcCompat="@drawable/roundsolid" />
 
     <ImageView
@@ -93,13 +95,11 @@
         android:id="@+id/iv_lrg_table1"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginEnd="65dp"
-        android:layout_marginBottom="220dp"
+        android:layout_marginStart="151dp"
+        android:layout_marginTop="27dp"
         android:contentDescription="@string/img_large_rectangle_table_icon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/overhead"
+        app:layout_constraintTop_toTopOf="@+id/overhead"
         app:srcCompat="@drawable/rectanglesolid" />
 
     <ImageView
@@ -136,12 +136,11 @@
         android:id="@+id/iv_lrg_table5"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginTop="145dp"
+        android:layout_marginEnd="50dp"
         android:contentDescription="@string/img_large_rectangle_table_icon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/overhead"
+        app:layout_constraintTop_toTopOf="@+id/overhead"
         app:srcCompat="@drawable/rectanglesolid" />
 
     <ImageView
@@ -153,6 +152,37 @@
         app:layout_constraintEnd_toEndOf="@+id/iv_lrg_table5"
         app:layout_constraintTop_toBottomOf="@+id/iv_lrg_table5"
         app:srcCompat="@drawable/rectanglesolid" />
+
+    <TextView
+        android:id="@+id/tv_enter_name_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textSize="17sp"
+        android:text="@string/enter_your_name_to_reserve"
+        app:layout_constraintEnd_toEndOf="@+id/overhead"
+        app:layout_constraintStart_toStartOf="@+id/overhead"
+        app:layout_constraintTop_toBottomOf="@+id/overhead" />
+
+    <EditText
+        android:id="@+id/etv_name_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:textSize="16sp"
+        android:text="@string/name"
+        app:layout_constraintEnd_toEndOf="@+id/tv_enter_name_prompt"
+        app:layout_constraintStart_toStartOf="@+id/tv_enter_name_prompt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_enter_name_prompt" />
+
+    <Button
+        android:id="@+id/btn_reserve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reserve"
+        app:layout_constraintEnd_toEndOf="@+id/etv_name_field"
+        app:layout_constraintTop_toBottomOf="@+id/etv_name_field" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

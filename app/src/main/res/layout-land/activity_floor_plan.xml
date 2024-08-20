@@ -20,12 +20,13 @@
 
     <ImageView
         android:id="@+id/overhead"
-        android:layout_width="320dp"
-        android:layout_height="270dp"
+        android:layout_width="369dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:contentDescription="@string/img_floor_plan"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:srcCompat="@drawable/overhead" />
 
     <ImageView
@@ -153,5 +154,37 @@
         app:layout_constraintEnd_toEndOf="@+id/iv_lrg_table5"
         app:layout_constraintTop_toBottomOf="@+id/iv_lrg_table5"
         app:srcCompat="@drawable/rectanglesolid" />
+
+    <TextView
+        android:id="@+id/tv_enter_name_prompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/enter_your_name_to_reserve"
+        android:textSize="17sp"
+        app:layout_constraintStart_toEndOf="@+id/overhead"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <EditText
+        android:id="@+id/etv_name_field"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/name"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/tv_enter_name_prompt"
+        app:layout_constraintStart_toStartOf="@+id/tv_enter_name_prompt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_enter_name_prompt" />
+
+    <Button
+        android:id="@+id/btn_reserve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reserve"
+        app:layout_constraintEnd_toEndOf="@+id/etv_name_field"
+        app:layout_constraintTop_toBottomOf="@+id/etv_name_field" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

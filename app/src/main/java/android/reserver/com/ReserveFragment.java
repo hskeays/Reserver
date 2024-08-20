@@ -35,6 +35,7 @@ public class ReserveFragment extends Fragment {
     private List<TimeSlot> timeSlots; // List to hold time slot data
     private DatabaseHelper dbHelper; // Database helper instance
     private String selectedDay; // Selected day for the reservation
+    private String selectedTime;
 
     @Nullable
     @Override
@@ -106,8 +107,8 @@ public class ReserveFragment extends Fragment {
         Toast.makeText(getActivity(), selectedDay + " selected", Toast.LENGTH_SHORT).show();
     }
 
-    // Method to handle time slot selection
     private void handleTimeSlotSelection(String selectedTime) {
+        this.selectedTime = selectedTime; // Save the selected time
         String seatingCountText = etvSeatingCountInput.getText().toString().trim();
 
         if (!seatingCountText.isEmpty()) {
@@ -176,16 +177,18 @@ public class ReserveFragment extends Fragment {
         }
     }
 
-    // Method to show a confirmation dialog
     private void showConfirmationDialog(int seatingCountInt) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Confirm Action");
-        builder.setMessage("Are you sure you want to proceed?");
+        builder.setMessage("Are you sure you want to proceed with " + seatingCountInt + " seats on " + selectedDay + " at " + selectedTime + "?");
 
         builder.setPositiveButton("Yes", (dialog, which) -> {
             // Start FloorPlanActivity with the seat count
             Intent intent = new Intent(getActivity(), FloorPlanActivity.class);
             intent.putExtra(SEAT_COUNT_KEY, seatingCountInt);
+            intent.putStringArrayListExtra("UNAVAIL_SEAT_NAMES", dbHelper.getUnavailableSeatsNames(selectedDay, selectedTime));
+            intent.putExtra("SELECTED_TIME", selectedTime); // Pass selected time to the next activity
+            intent.putExtra("SELECTED_DAY", selectedDay); // Pass selected day to the next activity
             startActivity(intent);
         });
 
