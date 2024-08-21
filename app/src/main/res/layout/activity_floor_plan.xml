@@ -158,8 +158,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:textSize="17sp"
         android:text="@string/enter_your_name_to_reserve"
+        android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="@+id/overhead"
         app:layout_constraintStart_toStartOf="@+id/overhead"
         app:layout_constraintTop_toBottomOf="@+id/overhead" />
@@ -170,8 +170,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:textSize="16sp"
         android:text="@string/name"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/tv_enter_name_prompt"
         app:layout_constraintStart_toStartOf="@+id/tv_enter_name_prompt"
         app:layout_constraintTop_toBottomOf="@+id/tv_enter_name_prompt" />

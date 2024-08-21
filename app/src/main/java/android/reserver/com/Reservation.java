@@ -19,36 +19,36 @@ public class Reservation {
         return id;
     }
 
-    public int getSeatId() {
-        return seatId;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public String getDay() {
-        return day;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getSeatId() {
+        return seatId;
     }
 
     public void setSeatId(int seatId) {
         this.seatId = seatId;
     }
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
 
+    public String getDay() {
+        return day;
+    }
+
     public void setDay(String day) {
         this.day = day;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public void setTime(String time) {

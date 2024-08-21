@@ -1,5 +1,6 @@
 package android.reserver.com;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +12,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
+    // Database configuration constants
     private static final String DATABASE_NAME = "restaurant_reservations.db"; // Database name
     private static final int DATABASE_VERSION = 1; // Database version
 
@@ -97,12 +99,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             db = this.getReadableDatabase(); // Get readable database
 
+            // Construct the query based on the number of seats required
             String query;
             if (numberOfSeats >= 4 && numberOfSeats <= 6) {
                 query = "SELECT * FROM " + TABLE_SEATS + " WHERE " + COLUMN_TYPE + " = 'Booth' AND id NOT IN " +
                         "(SELECT seatId FROM " + TABLE_RESERVATIONS + " WHERE day = ? AND time = ?)";
             } else {
-                // If not in the range, you might want to handle other seat types
+                // Handle other seat types if not in the range
                 query = "SELECT * FROM " + TABLE_SEATS + " WHERE id NOT IN " +
                         "(SELECT seatId FROM " + TABLE_RESERVATIONS + " WHERE day = ? AND time = ?)";
             }
@@ -142,6 +145,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return availableSeats; // Return the list of available seats
     }
 
+    // Method to retrieve names of unavailable seats based on the selected day and time
     public ArrayList<String> getUnavailableSeatsNames(String day, String time) {
         ArrayList<String> unavailableSeats = new ArrayList<>(); // List to hold unavailable seat names
         SQLiteDatabase db = null; // Database instance
@@ -161,17 +165,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             // Check if the cursor has results
             if (cursor.moveToFirst()) {
                 // Get column indices for seat attributes
-                int idIndex = cursor.getColumnIndex(COLUMN_ID);
                 int nameIndex = cursor.getColumnIndex(COLUMN_NAME);
-                int typeIndex = cursor.getColumnIndex(COLUMN_TYPE);
 
                 do {
-                    // Retrieve seat attributes from the cursor
-                    int id = cursor.getInt(idIndex);
+                    // Retrieve seat name from the cursor and add it to the list of unavailable seats
                     String name = cursor.getString(nameIndex);
-                    String type = cursor.getString(typeIndex);
-
-                    // Create a new Seat object and add it to the list of unavailable seats
                     unavailableSeats.add(name);
                 } while (cursor.moveToNext());
             } else {
@@ -192,4 +190,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return unavailableSeats; // Return the list of unavailable seats
     }
 
+    // Method to insert new reservation data into the database
+    public long insertReservation(SQLiteDatabase db, String tableId, String customerName, String day, String time) {
+        // Create a ContentValues object to hold the data
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SEAT_ID, tableId);
+        values.put(COLUMN_CUSTOMER_NAME, customerName);
+        values.put(COLUMN_DAY, day);
+        values.put(COLUMN_TIME, time);
+
+        // Return the result (row ID or -1 if failed)
+        return db.insert(TABLE_RESERVATIONS, null, values);
+    }
 }

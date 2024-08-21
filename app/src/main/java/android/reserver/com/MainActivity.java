@@ -12,27 +12,36 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
+    private DatabaseHelper dbHelper; // Database helper instance
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this); // Enable edge-to-edge display
-        setContentView(R.layout.activity_main); // Set the content view to the main activity layout
+
+        // Enable edge-to-edge display
+        EdgeToEdge.enable(this);
+
+        // Set the content view to the main activity layout
+        setContentView(R.layout.activity_main);
+
+        // Initialize the database helper
+        dbHelper = new DatabaseHelper(this);
+        dbHelper.getWritableDatabase();
 
         // Set up the toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setupToolbar();
 
         // Check if there is a saved instance state to avoid recreating the fragment
         if (savedInstanceState == null) {
-            // Begin the fragment transaction
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
             // Replace the container with the ReserveFragment
-            transaction.replace(R.id.fragment_container, new ReserveFragment());
-
-            // Commit the transaction
-            transaction.commit();
+            loadReserveFragment();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbHelper.close();  // Close the underlying database
     }
 
     /**
@@ -51,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
      * Handles selection of menu items.
      *
      * @param item The selected menu item.
-     * @return true if the item is handled, otherwise calls the superclass implementation.
+     * @return true if the item is handled; otherwise, calls the superclass implementation.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -59,15 +68,30 @@ public class MainActivity extends AppCompatActivity {
 
         // Handle the "Info" menu item click
         if (id == R.id.ic_info) {
-            Intent intent = new Intent(this, InfoActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, InfoActivity.class));
         }
         // Handle the "Help" menu item click
         else if (id == R.id.ic_help) {
-            Intent intent = new Intent(this, HelpActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, HelpActivity.class));
         }
 
         return super.onOptionsItemSelected(item); // Call the superclass implementation for any unhandled menu items
+    }
+
+    /**
+     * Sets up the toolbar for the activity.
+     */
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    /**
+     * Loads the ReserveFragment into the fragment container.
+     */
+    private void loadReserveFragment() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, new ReserveFragment());
+        transaction.commit(); // Commit the transaction
     }
 }

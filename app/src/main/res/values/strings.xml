@@ -13,13 +13,6 @@
     <string name="img_large_rectangle_table_icon">Large rectangle table icon</string>
     <string name="back_icon">Back icon</string>
 
-    <!-- Feedback Messages -->
-    <string name="seat_count_error_msg">The number must be between 1 and 6</string>
-    <string name="seat_count_larger_than_6_msg">Please call 123–456–7890 to make a reservation for parties larger than 6</string>
-    <string name="seat_count_success_msg">Thank you for reserving your seat(s)!</string>
-    <string name="seat_count_empty_error_msg">Please enter the amount of seats you would like to reserve</string>
-    <string name="seat_count_gt_1000">Okay, let\'s not get ridiculous.</string>
-
     <!-- Days of the Week -->
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
@@ -35,9 +28,21 @@
     <string name="seven_pm">7:00 p.m.</string>
     <string name="seven_thirty_pm">7:30 p.m.</string>
 
+    <!-- Feedback Messages -->
+    <string name="seat_count_error_msg">The number must be between 1 and 6</string>
+    <string name="seat_count_larger_than_6_msg">Please call 123–456–7890 to make a reservation for parties larger than 6</string>
+    <string name="seat_count_success_msg">Thank you for reserving your seat(s)!</string>
+    <string name="seat_count_empty_error_msg">Please enter the amount of seats you would like to reserve</string>
+    <string name="seat_count_gt_1000">Okay, let\'s not get ridiculous.</string>
+
     <!-- Menu Items -->
     <string name="help">Help</string>
     <string name="info">Information</string>
+
+    <!-- Reservation Instructions -->
+    <string name="how_to_make_a_reservation">How to Make a Reservation</string>
+    <string name="help_step_1">1. Enter the number of seats you would like to reserve, pick a day, pick a time, and press Submit.</string>
+    <string name="help_step_2">2. Select ONE table, enter your name, and press Reserve</string>
 
     <!-- Miscellaneous -->
     <string name="empty_string"> </string>

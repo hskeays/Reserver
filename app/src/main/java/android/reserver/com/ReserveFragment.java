@@ -101,6 +101,15 @@ public class ReserveFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Close the database when the fragment's view is destroyed
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
+    }
+
     // Method to handle day selection
     private void selectDay(String day) {
         selectedDay = day;
@@ -162,8 +171,13 @@ public class ReserveFragment extends Fragment {
         if (!seatingCountText.isEmpty()) {
             try {
                 int seatingCountInt = Integer.parseInt(seatingCountText);
+
+                // Validate input
                 if (seatingCountInt > 6 || seatingCountInt < 1) {
                     Toast.makeText(getActivity(), R.string.seat_count_error_msg, Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (selectedDay == null || selectedTime == null) {
+                    Toast.makeText(getActivity(), "Please select a day and time", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -180,15 +194,15 @@ public class ReserveFragment extends Fragment {
     private void showConfirmationDialog(int seatingCountInt) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Confirm Action");
-        builder.setMessage("Are you sure you want to proceed with " + seatingCountInt + " seats on " + selectedDay + " at " + selectedTime + "?");
+        builder.setMessage("Are you sure you want to proceed with " + seatingCountInt + " seat(s) on " + selectedDay + " at " + selectedTime + "?");
 
         builder.setPositiveButton("Yes", (dialog, which) -> {
             // Start FloorPlanActivity with the seat count
             Intent intent = new Intent(getActivity(), FloorPlanActivity.class);
             intent.putExtra(SEAT_COUNT_KEY, seatingCountInt);
             intent.putStringArrayListExtra("UNAVAIL_SEAT_NAMES", dbHelper.getUnavailableSeatsNames(selectedDay, selectedTime));
-            intent.putExtra("SELECTED_TIME", selectedTime); // Pass selected time to the next activity
             intent.putExtra("SELECTED_DAY", selectedDay); // Pass selected day to the next activity
+            intent.putExtra("SELECTED_TIME", selectedTime); // Pass selected time to the next activity
             startActivity(intent);
         });
 

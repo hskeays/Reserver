@@ -1,14 +1,19 @@
 package android.reserver.com;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
@@ -19,21 +24,26 @@ import androidx.core.view.WindowInsetsCompat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class FloorPlanActivity extends AppCompatActivity {
 
+    // Map to associate ImageViews with their respective table names
+    private final Map<ImageView, String> tableMap = new HashMap<>();
+    // HashMap to associate table names with their IDs
+    private final HashMap<String, Integer> tableNameToIdHashMap = new HashMap<>();
+    private DatabaseHelper dbHelper; // Database helper instance
     // ImageView references for small and large tables
     private ImageView ivSmallTable1, ivSmallTable2, ivSmallTable3, ivSmallTable4, ivSmallTable5, ivSmallTable6;
     private ImageView ivLargeTable1, ivLargeTable2, ivLargeTable3, ivLargeTable4, ivLargeTable5, ivLargeTable6;
-
-    // Map to associate ImageViews with their respective table names
-    private final Map<ImageView, String> tableMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_floor_plan);
+
+        dbHelper = new DatabaseHelper(this);
 
         // Setup the toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -49,9 +59,13 @@ public class FloorPlanActivity extends AppCompatActivity {
         // Retrieve extras from the Intent
         int seatCountInt = getIntent().getIntExtra("SEAT_COUNT", 0);
         ArrayList<String> unavailSeatNames = getIntent().getStringArrayListExtra("UNAVAIL_SEAT_NAMES");
+        String selectedDay = getIntent().getStringExtra("SELECTED_DAY");
+        String selectedTime = getIntent().getStringExtra("SELECTED_TIME");
 
         // Initialize ImageView variables
         initializeImageViews();
+
+        initializeTableNameIdHashMap();
 
         // Create arrays for small and large table ImageViews
         ImageView[] smallTableImgViews = {ivSmallTable1, ivSmallTable2, ivSmallTable3, ivSmallTable4, ivSmallTable5, ivSmallTable6};
@@ -65,7 +79,54 @@ public class FloorPlanActivity extends AppCompatActivity {
 
         // Set images for unavailable seats
         setImagesForUnavailableSeats(unavailSeatNames, seatCountInt);
+
+        EditText etvName = findViewById(R.id.etv_name_field);
+        Button btnReserve = findViewById(R.id.btn_reserve);
+
+        btnReserve.setOnClickListener(view -> {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            dbHelper.getWritableDatabase();
+
+            // check hashmap size is 1 - only one table selected
+            // check customerName != null
+            String customerName = etvName.getText().toString();
+            if (tableMap.size() == 1 && !customerName.isEmpty()) {
+                // create dialogue box "Thank you NAME for reserving table TABLENAME on DAY at TIME"
+                AlertDialog.Builder builder = new AlertDialog.Builder(FloorPlanActivity.this);
+
+                String tableName = tableMap.values().iterator().next();
+                String tableId = Objects.requireNonNull(tableNameToIdHashMap.get(tableName)).toString();
+
+
+                String message = String.format("Are you sure you want to reserve table %s on %s at %s?", tableName, selectedDay, selectedTime);
+
+                builder.setMessage(message);
+
+                builder.setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+
+                builder.setPositiveButton("Reserve", (dialog, which) -> {
+                    long result = dbHelper.insertReservation(db, tableId, customerName, selectedDay, selectedTime);
+
+                    if (result != -1) { // Check if insertion was successful
+                        Toast.makeText(FloorPlanActivity.this, "Reservation successful!", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(FloorPlanActivity.this, "Reservation failed. Please try again.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    // Finish the activity after the reservation process
+                    finish();
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show(); // Display the dialog
+            } else {
+                Toast.makeText(FloorPlanActivity.this, "Please select only one table and enter your name.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -180,6 +241,19 @@ public class FloorPlanActivity extends AppCompatActivity {
                 default:
                     break;
             }
+        }
+    }
+
+    // Method to initialize table names and IDs HashMap
+    private void initializeTableNameIdHashMap() {
+        // C1 to C6 with values 1 to 6
+        for (int i = 1; i <= 6; i++) {
+            tableNameToIdHashMap.put("C" + i, i);
+        }
+
+        // B1 to B6 with values 7 to 12
+        for (int i = 1; i <= 6; i++) {
+            tableNameToIdHashMap.put("B" + i, i + 6);
         }
     }
 
