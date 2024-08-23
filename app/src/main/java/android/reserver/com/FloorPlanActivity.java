@@ -96,21 +96,25 @@ public class FloorPlanActivity extends AppCompatActivity {
 
                 String tableName = tableMap.values().iterator().next();
                 String tableId = Objects.requireNonNull(tableNameToIdHashMap.get(tableName)).toString();
-
-
                 String message = String.format("Are you sure you want to reserve table %s on %s at %s?", tableName, selectedDay, selectedTime);
 
                 builder.setMessage(message);
 
-                builder.setNegativeButton("Cancel", (dialog, which) -> {
-                    dialog.dismiss();
-                });
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
 
                 builder.setPositiveButton("Reserve", (dialog, which) -> {
                     long result = dbHelper.insertReservation(db, tableId, customerName, selectedDay, selectedTime);
 
                     if (result != -1) { // Check if insertion was successful
-                        Toast.makeText(FloorPlanActivity.this, "Reservation successful!", Toast.LENGTH_LONG).show();
+//                        Toast.makeText(FloorPlanActivity.this, "Reservation successful!", Toast.LENGTH_LONG).show();
+                        String confirmation_msg = String.format("Thank you %s for reserving seat %s on %s at %s!", customerName, tableName, selectedDay, selectedTime);
+                        Intent intent = new Intent(this, ReservationConfirmation.class);
+                        intent.putExtra("CONFIRMATION_MSG", confirmation_msg);
+                        intent.putExtra("CUSTOMER_NAME", customerName);
+                        intent.putExtra("TABLE_NAME", tableName);
+                        intent.putExtra("SELECTED_DAY", selectedDay);
+                        intent.putExtra("SELECTED_TIME", selectedTime);
+                        startActivity(intent);
                     } else {
                         Toast.makeText(FloorPlanActivity.this, "Reservation failed. Please try again.", Toast.LENGTH_SHORT).show();
                     }
@@ -304,11 +308,11 @@ public class FloorPlanActivity extends AppCompatActivity {
          */
         private void toggleImage(Drawable currentDrawable, Drawable solidDrawable, Drawable fadedDrawable, int solidResId, int fadedResId) {
             if (currentDrawable != null && solidDrawable != null && fadedDrawable != null) {
-                if (currentDrawable.getConstantState().equals(solidDrawable.getConstantState())) {
+                if (Objects.equals(currentDrawable.getConstantState(), solidDrawable.getConstantState())) {
                     // Change to "faded" state
                     imageView.setImageResource(fadedResId);
                     tableMap.put(imageView, tableName); // Save the table name
-                } else if (currentDrawable.getConstantState().equals(fadedDrawable.getConstantState())) {
+                } else if (Objects.equals(currentDrawable.getConstantState(), fadedDrawable.getConstantState())) {
                     // Change back to "solid" state
                     imageView.setImageResource(solidResId);
                     tableMap.remove(imageView); // Remove the table name

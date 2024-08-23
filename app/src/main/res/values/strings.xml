@@ -34,6 +34,7 @@
     <string name="seat_count_success_msg">Thank you for reserving your seat(s)!</string>
     <string name="seat_count_empty_error_msg">Please enter the amount of seats you would like to reserve</string>
     <string name="seat_count_gt_1000">Okay, let\'s not get ridiculous.</string>
+    <string name="reservation_confirmation">Thank you %1$s for reserving table %2$s on %3$s at %4$s!</string>
 
     <!-- Menu Items -->
     <string name="help">Help</string>
@@ -52,4 +53,6 @@
     <string name="enter_your_name_to_reserve">Enter your name to reserve your seat</string>
     <string name="reserve">Reserve</string>
     <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="send_email_msg">Click the button below to send an email to friends and family about your confirmed reservation!</string>
 </resources>
