@@ -1,11 +1,9 @@
 package android.reserver.com;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,7 +33,8 @@ public class FloorPlanActivity extends AppCompatActivity {
     private final Map<ImageView, String> tableMap = new HashMap<>();
     // HashMap to associate table names with their IDs
     private final HashMap<String, Integer> tableNameToIdHashMap = new HashMap<>();
-    private DatabaseHelper dbHelper; // Database helper instance
+    // Database helper instance
+    private DatabaseHelper dbHelper;
     // ImageView references for small and large tables
     private ImageView ivSmallTable1, ivSmallTable2, ivSmallTable3, ivSmallTable4, ivSmallTable5, ivSmallTable6;
     private ImageView ivLargeTable1, ivLargeTable2, ivLargeTable3, ivLargeTable4, ivLargeTable5, ivLargeTable6;
@@ -312,14 +311,34 @@ public class FloorPlanActivity extends AppCompatActivity {
          */
         private void toggleImage(Drawable currentDrawable, Drawable solidDrawable, Drawable fadedDrawable, int solidResId, int fadedResId) {
             if (currentDrawable != null && solidDrawable != null && fadedDrawable != null) {
-                if (Objects.equals(currentDrawable.getConstantState(), solidDrawable.getConstantState())) {
+                if ((Objects.equals(currentDrawable.getConstantState(), solidDrawable.getConstantState())) && tableMap.isEmpty())  {
                     // Change to "faded" state
                     imageView.setImageResource(fadedResId);
                     tableMap.put(imageView, tableName); // Save the table name
+
+                    // Scale the ImageView along the X-axis and Y-axis from 1x to 1.2X
+                    ObjectAnimator scaleXAnimation = ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.2f);
+                    ObjectAnimator scaleYAnimation = ObjectAnimator.ofFloat(imageView, "scaleY", 1f, 1.2f);
+
+                    scaleXAnimation.setDuration(200); // 1 second
+                    scaleYAnimation.setDuration(200); // 1 second
+
+                    scaleXAnimation.start();
+                    scaleYAnimation.start();
                 } else if (Objects.equals(currentDrawable.getConstantState(), fadedDrawable.getConstantState())) {
                     // Change back to "solid" state
                     imageView.setImageResource(solidResId);
                     tableMap.remove(imageView); // Remove the table name
+
+                    // Reverse animation
+                    ObjectAnimator reverseScaleXAnimation = ObjectAnimator.ofFloat(imageView, "scaleX", 1.2f, 1f);
+                    ObjectAnimator reverseScaleYAnimation = ObjectAnimator.ofFloat(imageView, "scaleY", 1.2f, 1f);
+
+                    reverseScaleXAnimation.setDuration(200);
+                    reverseScaleYAnimation.setDuration(200);
+
+                    reverseScaleXAnimation.start();
+                    reverseScaleYAnimation.start();
                 }
             }
         }
