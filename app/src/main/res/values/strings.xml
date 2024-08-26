@@ -54,5 +54,6 @@
     <string name="reserve">Reserve</string>
     <string name="name">Name</string>
     <string name="email">Email</string>
-    <string name="send_email_msg">Click the button below to send an email to friends and family about your confirmed reservation!</string>
+    <string name="send_email_msg">Below are buttons to set a notification and to email friends and family about your reservation.</string>
+    <string name="reminder">Reminder</string>
 </resources>

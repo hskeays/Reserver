@@ -1,8 +1,11 @@
 package android.reserver.com;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -43,6 +46,7 @@ public class FloorPlanActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_floor_plan);
 
+        // Initialize the database helper
         dbHelper = new DatabaseHelper(this);
 
         // Setup the toolbar
