@@ -311,14 +311,14 @@ public class FloorPlanActivity extends AppCompatActivity {
          */
         private void toggleImage(Drawable currentDrawable, Drawable solidDrawable, Drawable fadedDrawable, int solidResId, int fadedResId) {
             if (currentDrawable != null && solidDrawable != null && fadedDrawable != null) {
-                if ((Objects.equals(currentDrawable.getConstantState(), solidDrawable.getConstantState())) && tableMap.isEmpty())  {
+                if ((Objects.equals(currentDrawable.getConstantState(), solidDrawable.getConstantState())) && tableMap.isEmpty()) {
                     // Change to "faded" state
                     imageView.setImageResource(fadedResId);
                     tableMap.put(imageView, tableName); // Save the table name
 
                     // Scale the ImageView along the X-axis and Y-axis from 1x to 1.2X
-                    ObjectAnimator scaleXAnimation = ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.2f);
-                    ObjectAnimator scaleYAnimation = ObjectAnimator.ofFloat(imageView, "scaleY", 1f, 1.2f);
+                    ObjectAnimator scaleXAnimation = ObjectAnimator.ofFloat(imageView, "scaleX", 1f, 1.3f);
+                    ObjectAnimator scaleYAnimation = ObjectAnimator.ofFloat(imageView, "scaleY", 1f, 1.3f);
 
                     scaleXAnimation.setDuration(200); // 1 second
                     scaleYAnimation.setDuration(200); // 1 second
@@ -331,8 +331,8 @@ public class FloorPlanActivity extends AppCompatActivity {
                     tableMap.remove(imageView); // Remove the table name
 
                     // Reverse animation
-                    ObjectAnimator reverseScaleXAnimation = ObjectAnimator.ofFloat(imageView, "scaleX", 1.2f, 1f);
-                    ObjectAnimator reverseScaleYAnimation = ObjectAnimator.ofFloat(imageView, "scaleY", 1.2f, 1f);
+                    ObjectAnimator reverseScaleXAnimation = ObjectAnimator.ofFloat(imageView, "scaleX", 1.3f, 1f);
+                    ObjectAnimator reverseScaleYAnimation = ObjectAnimator.ofFloat(imageView, "scaleY", 1.3f, 1f);
 
                     reverseScaleXAnimation.setDuration(200);
                     reverseScaleYAnimation.setDuration(200);

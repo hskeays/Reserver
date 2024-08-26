@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 public class MainActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper; // Database helper instance
+    private Intent audioIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +29,30 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         dbHelper.getWritableDatabase();
 
-        // Set up the toolbar
-        setupToolbar();
+        // Setup the toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        audioIntent = new Intent(this, AudioService.class);
+        startService(audioIntent);
 
         // Check if there is a saved instance state to avoid recreating the fragment
         if (savedInstanceState == null) {
             // Replace the container with the ReserveFragment
             loadReserveFragment();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopService(audioIntent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startService(audioIntent);
     }
 
     @Override
@@ -76,14 +93,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item); // Call the superclass implementation for any unhandled menu items
-    }
-
-    /**
-     * Sets up the toolbar for the activity.
-     */
-    private void setupToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
     }
 
     /**
