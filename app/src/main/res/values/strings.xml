@@ -56,4 +56,11 @@
     <string name="email">Email</string>
     <string name="send_email_msg">Below are buttons to set a notification and to email friends and family about your reservation.</string>
     <string name="reminder">Reminder</string>
+    <string name="check_in_prompt">Please take a photo of yourself to check in</string>
+    <string name="check_in">CHECK IN</string>
+    <string name="activate_camera">Activate Camera</string>
+    <string name="save">Save</string>
+    <string name="retake">Retake</string>
+    <string name="cancel">Cancel</string>
+    <string name="placeholder_image">placeholder image</string>
 </resources>

@@ -57,6 +57,9 @@ public class ReserveFragment extends Fragment {
         btnSaturday.setOnClickListener(v -> selectDay("Saturday"));
         btnSunday.setOnClickListener(v -> selectDay("Sunday"));
 
+        Button btnCheckIn = view.findViewById(R.id.btn_check_in_fragment);
+        btnCheckIn.setOnClickListener(v -> handleCheckInClick());
+
         // Set up the submit button's click listener
         Button btnSubmit = view.findViewById(R.id.btn_submit);
         btnSubmit.setOnClickListener(v -> handleSubmit());
@@ -162,6 +165,11 @@ public class ReserveFragment extends Fragment {
         builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss()); // Dismiss dialog on "OK" selection
         AlertDialog dialog = builder.create();
         dialog.show(); // Display the dialog
+    }
+
+    private void handleCheckInClick() {
+        Intent checkInIntent = new Intent(getActivity(), CheckInActivity.class);
+        startActivity(checkInIntent);
     }
 
     // Method to handle submission of the reservation

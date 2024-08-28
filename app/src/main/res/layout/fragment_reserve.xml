@@ -1,82 +1,104 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tv_seat_count_prompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
         android:text="@string/seat_count_prompt"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/etv_seating_count_input"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:autofillHints=""
         android:ems="10"
         android:hint="@string/seat_count_input_hint"
         android:inputType="number"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/tv_seat_count_prompt"
+        app:layout_constraintStart_toStartOf="@+id/tv_seat_count_prompt"
+        app:layout_constraintTop_toBottomOf="@+id/tv_seat_count_prompt" />
 
     <TextView
         android:id="@+id/tv_feedback_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:minHeight="40dp"
         android:text="@string/empty_string"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@id/etv_seating_count_input"
+        app:layout_constraintStart_toStartOf="@id/etv_seating_count_input"
+        app:layout_constraintTop_toBottomOf="@+id/etv_seating_count_input" />
 
     <!-- Day Buttons -->
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btn_fri"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginStart="40dp"
+        android:text="@string/friday"
+        app:layout_constraintEnd_toStartOf="@id/btn_sat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_feedback_msg" />
 
-        <Button
-            android:id="@+id/btn_fri"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/friday" />
+    <Button
+        android:id="@+id/btn_sat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/saturday"
+        app:layout_constraintEnd_toStartOf="@id/btn_sun"
+        app:layout_constraintStart_toEndOf="@+id/btn_fri"
+        app:layout_constraintTop_toTopOf="@+id/btn_fri" />
 
-        <Button
-            android:id="@+id/btn_sat"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/saturday" />
-
-        <Button
-            android:id="@+id/btn_sun"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/sunday" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/btn_sun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:text="@string/sunday"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_sat"
+        app:layout_constraintTop_toTopOf="@+id/btn_sat" />
 
     <!-- RecyclerView for Time Slots -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_time_slots"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_fri"
+        app:layout_constraintBottom_toTopOf="@+id/btn_submit"
         app:spanCount="2" />
 
+    <!-- Submit Button pinned to the bottom -->
     <Button
         android:id="@+id/btn_submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="@string/submit" />
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/btn_check_in_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:text="@string/check_in"
+        app:layout_constraintEnd_toStartOf="@+id/btn_submit"
+        app:layout_constraintTop_toTopOf="@+id/btn_submit" />
+</androidx.constraintlayout.widget.ConstraintLayout>
