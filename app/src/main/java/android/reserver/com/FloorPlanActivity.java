@@ -185,7 +185,8 @@ public class FloorPlanActivity extends AppCompatActivity {
      * @param tablePrefix      Prefix for naming tables (e.g., "C" for small tables, "B" for large tables)
      * @param unavailSeatNames List of unavailable seat names
      */
-    private void setTableClickListeners(ImageView[] tableImgViews, String tablePrefix, ArrayList<String> unavailSeatNames) {
+    private void setTableClickListeners(
+            ImageView[] tableImgViews, String tablePrefix, ArrayList<String> unavailSeatNames) {
         for (int i = 0; i < tableImgViews.length; i++) {
             String tableName = tablePrefix + (i + 1); // Naming tables as "C1", "C2", etc.
             tableImgViews[i].setOnClickListener(new ImageToggleListener(tableImgViews[i], tableName, unavailSeatNames));
@@ -198,7 +199,8 @@ public class FloorPlanActivity extends AppCompatActivity {
      * @param unavailSeatNames List of unavailable seat names
      * @param seatCountInt     Total number of seats
      */
-    private void setImagesForUnavailableSeats(ArrayList<String> unavailSeatNames, int seatCountInt) {
+    private void setImagesForUnavailableSeats(
+            ArrayList<String> unavailSeatNames, int seatCountInt) {
         // Set all small tables to "faded" if seat count is 4 or more
         if (seatCountInt >= 4) {
             for (ImageView smallTable : new ImageView[]{ivSmallTable1, ivSmallTable2, ivSmallTable3, ivSmallTable4, ivSmallTable5, ivSmallTable6}) {
@@ -272,7 +274,8 @@ public class FloorPlanActivity extends AppCompatActivity {
         private final String tableName;
         private final ArrayList<String> unavailSeatNames;
 
-        public ImageToggleListener(ImageView imageView, String tableName, ArrayList<String> unavailSeatNames) {
+        public ImageToggleListener(
+                ImageView imageView, String tableName, ArrayList<String> unavailSeatNames) {
             this.imageView = imageView;
             this.tableName = tableName;
             this.unavailSeatNames = unavailSeatNames;
@@ -309,7 +312,8 @@ public class FloorPlanActivity extends AppCompatActivity {
          * @param solidResId      Resource ID for solid drawable
          * @param fadedResId      Resource ID for faded drawable
          */
-        private void toggleImage(Drawable currentDrawable, Drawable solidDrawable, Drawable fadedDrawable, int solidResId, int fadedResId) {
+        private void toggleImage(
+                Drawable currentDrawable, Drawable solidDrawable, Drawable fadedDrawable, int solidResId, int fadedResId) {
             if (currentDrawable != null && solidDrawable != null && fadedDrawable != null) {
                 if ((Objects.equals(currentDrawable.getConstantState(), solidDrawable.getConstantState())) && tableMap.isEmpty()) {
                     // Change to "faded" state

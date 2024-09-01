@@ -30,6 +30,11 @@ import java.io.OutputStream;
 public class CheckInActivity extends AppCompatActivity {
 
     private ImageView ivPhoto;
+    // Capture and display a thumbnail image using the camera
+    private final ActivityResultLauncher<Void> takePicturePreview = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), thumbnail -> {
+        // Show thumbnail image
+        ivPhoto.setImageBitmap(thumbnail);
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +133,6 @@ public class CheckInActivity extends AppCompatActivity {
         return false;
     }
 
-
     private void handleCheckInClick() {
         if (handleSaveClick()) {
             Toast.makeText(this, "Check in successful, we look forward to seeing you!", Toast.LENGTH_LONG).show();
@@ -136,10 +140,4 @@ public class CheckInActivity extends AppCompatActivity {
             Toast.makeText(this, "Check in unsuccessful, please try again.", Toast.LENGTH_LONG).show();
         }
     }
-
-    // Capture and display a thumbnail image using the camera
-    private final ActivityResultLauncher<Void> takePicturePreview = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), thumbnail -> {
-        // Show thumbnail image
-        ivPhoto.setImageBitmap(thumbnail);
-    });
 }

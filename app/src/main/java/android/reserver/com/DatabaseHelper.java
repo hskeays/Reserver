@@ -70,24 +70,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void insertStarterData(SQLiteDatabase db) {
         // Insert data into the Seats table
         db.execSQL("INSERT INTO " + TABLE_SEATS + " (" + COLUMN_NAME + ", " + COLUMN_TYPE + ") VALUES " +
-                "('C1', 'Chair')," +
-                "('C2', 'Chair')," +
-                "('C3', 'Chair')," +
-                "('C4', 'Chair')," +
-                "('C5', 'Chair')," +
-                "('C6', 'Chair')," +
-                "('B1', 'Booth')," +
-                "('B2', 'Booth')," +
-                "('B3', 'Booth')," +
-                "('B4', 'Booth')," +
-                "('B5', 'Booth')," +
-                "('B6', 'Booth')");
+                           "('C1', 'Chair')," +
+                           "('C2', 'Chair')," +
+                           "('C3', 'Chair')," +
+                           "('C4', 'Chair')," +
+                           "('C5', 'Chair')," +
+                           "('C6', 'Chair')," +
+                           "('B1', 'Booth')," +
+                           "('B2', 'Booth')," +
+                           "('B3', 'Booth')," +
+                           "('B4', 'Booth')," +
+                           "('B5', 'Booth')," +
+                           "('B6', 'Booth')");
 
         // Insert data into the Reservations table (if needed)
         db.execSQL("INSERT INTO " + TABLE_RESERVATIONS + " (" + COLUMN_SEAT_ID + ", " +
-                COLUMN_CUSTOMER_NAME + ", " + COLUMN_DAY + ", " + COLUMN_TIME + ") VALUES " +
-                "(2, 'Clark Kent', 'Friday', '5:00')," +
-                "(6, 'Lois Lane', 'Friday', '5:00')");
+                           COLUMN_CUSTOMER_NAME + ", " + COLUMN_DAY + ", " + COLUMN_TIME + ") VALUES " +
+                           "(2, 'Clark Kent', 'Friday', '5:00')," +
+                           "(6, 'Lois Lane', 'Friday', '5:00')");
     }
 
     // Method to retrieve available seats based on the selected day and time

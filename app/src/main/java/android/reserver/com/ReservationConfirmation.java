@@ -75,7 +75,7 @@ public class ReservationConfirmation extends AppCompatActivity {
         // Set email details
         String emailSubject = "Reservation Confirmation";
         String emailTextBody = String.format("Hey, it's %s! I reserved table %s on %s at %s.",
-                customerName, tableName, selectedDay, selectedTime);
+                                             customerName, tableName, selectedDay, selectedTime);
 
         // Add on click listener on Email button to send an email
         btnEmail.setOnClickListener(view -> sendEmail(emailSubject, emailTextBody));
@@ -114,8 +114,8 @@ public class ReservationConfirmation extends AppCompatActivity {
             if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
-                        NOTIFICATION_PERMISSION_REQUEST_CODE);
+                                                  new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                                                  NOTIFICATION_PERMISSION_REQUEST_CODE);
             }
         }
     }
@@ -158,8 +158,8 @@ public class ReservationConfirmation extends AppCompatActivity {
                     != PackageManager.PERMISSION_GRANTED) {
                 // Request permission if not granted
                 ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
-                        NOTIFICATION_PERMISSION_REQUEST_CODE);
+                                                  new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                                                  NOTIFICATION_PERMISSION_REQUEST_CODE);
                 return;
             }
         }
@@ -170,7 +170,7 @@ public class ReservationConfirmation extends AppCompatActivity {
             if (alarmManager != null && !alarmManager.canScheduleExactAlarms()) {
                 // Inform the user about the permission requirement
                 Toast.makeText(this, "Please allow this app to schedule exact alarms in the app settings.",
-                        Toast.LENGTH_SHORT).show();
+                               Toast.LENGTH_SHORT).show();
                 // Redirect the user to app settings to grant permission
                 Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
                 startActivity(intent);
@@ -184,7 +184,7 @@ public class ReservationConfirmation extends AppCompatActivity {
         calendar.add(Calendar.DAY_OF_YEAR, 4);
         Intent intent = new Intent(this, NotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                                                                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         // Schedule the notification
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
